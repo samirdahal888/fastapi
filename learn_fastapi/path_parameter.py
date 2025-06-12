@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Path
+from fastapi import FastAPI,Path,HTTPException
 import json
 
 app = FastAPI()
@@ -12,5 +12,7 @@ def load_data():
 def view_particular_patient(Patient_id= Path(description="Patient id ",example=['P001'])) : # the value we got in our api can be directly accessible to the function like this
     # we acn use path parameter in the same place where we recive it in the function by doing =
     data = load_data()
-    return data[Patient_id] #since  our data is json and have patient id key , we can do this to get the particular patient
+    if Patient_id in data:
+        return data[Patient_id] #since  our data is json and have patient id key , we can do this to get the particular patient
+    raise HTTPException(status_code= 400,detail='patient not found') # like this we use http exception
 
